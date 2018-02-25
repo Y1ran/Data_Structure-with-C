@@ -15,11 +15,13 @@
 #endif // End
 /**0.树的结构**/
 
-typedef struct BNode{
+struct binary_tree{
     int data;
-    struct BNode *Lchild;
-    struct BNode *Rchild;
-}BNode;
+    struct binary_tree *Lchild;
+    struct binary_tree *Rchild;
+};
+typedef struct binary_tree BNode;
+
 
 
 
@@ -29,19 +31,19 @@ int CreateTree( BNode **Root);//此处使用
 int CreateTree( BNode **Root)
 {
     int Inp;
-    scanf("%d", &Inp);
-
-    if( Inp == -1)
+    int i = 0;
+    for( Inp = 0; i < 10; i++)
     {
+        scanf("%d", Inp);
         *Root = NULL;
-        //return 0;
-    }
-    else
+
+    if(1)
     {
         *Root = (BNode *)malloc(sizeof(BNode));
         if (Root == NULL)
         {
             printf("Failed\n");
+
             return 0;
         }
         else
@@ -52,21 +54,61 @@ int CreateTree( BNode **Root)
             CreateTree(&((*Root)->Rchild));
         }
     }
+    }
 
     return 1;
+}
+
+void insert(BNode **Tree, int val)
+{
+    BNode *new_root = NULL;
+    if((*Tree) == NULL)
+    {
+        BNode *new_root = NULL;
+        new_root =(BNode *)malloc(sizeof(BNode));
+        new_root->Lchild = NULL;   //make sure
+        new_root->Rchild = NULL;
+        new_root->data = val;
+
+        *Tree = new_root; //give new root to tree
+        return;
+    }
+
+    if (val < (*Tree)->data)
+    {
+        //make sure left always less than right
+        insert(&(*Tree)->Lchild, val);
+    }
+    else if ( val > (*Tree)->data)
+    {
+        insert(&(*Tree)->Rchild, val);
+    }
+    else
+        printf("Please do not enter same number twice");
+}
+
+
+void delete_tree( BNode *Tree)
+{
+    if(Tree)
+    {
+        delete_tree(Tree->Lchild);
+        delete_tree(Tree->Rchild);
+        free(Tree);
+    }
 }
 
 /**2. 二叉树的先序遍历**/
 
 void PreTrav(BNode *Root)
 {
-    if( Root == NULL)
+if( Root == NULL)
     {
         return;
     }
     else
     {
-        printf("%d:", Root->data);
+        printf("%d\n", Root->data);
         PreTrav(Root->Lchild);
         PreTrav(Root->Rchild);
     }
@@ -83,7 +125,7 @@ void MidTrav(BNode *Root)
     else
     {
         MidTrav(Root->Lchild);
-        printf("%d ",Root->data);
+        printf("%d\n",Root->data);
         MidTrav(Root->Rchild);
     }
 }
@@ -100,59 +142,82 @@ void PostTrav(BNode *Root)
     {
         PostTrav(Root->Lchild);
         PostTrav(Root->Rchild);
-        printf("%d ",Root->data);
+        printf("%d\n",Root->data);
     }
 }
 
 /**5. 二叉树的shendu**/
 
+int max(int x, int y)
+{
+    return x>y? x:y;
+}
+
 int TreeDeep(BNode *Root)
 {
-    int deep = 0;
-    if (Root != NULL)
-    {
-        int leftdeep = TreeDeep(Root->Lchild);
-        int rightdeep = TreeDeep(Root->Rchild);
 
-        if( leftdeep >= rightdeep)
-        {
-            leftdeep++;
-        }
-        else
-            rightdeep++;
+    if(Root == NULL)
+        return 0;
+    else
+        return max(TreeDeep(Root->Lchild) + 1, TreeDeep(Root->Rchild) + 1);
+}
+    //return deep;
 
+void insert2(BNode ** tree, int val) {
+    BNode * temp = NULL;
+    if(!(*tree)) {
+        temp = (BNode *)malloc(sizeof(BNode));
+        temp->Lchild = temp->Rchild = NULL;
+        temp->data = val;
+        *tree = temp;
+        return ;
     }
 
-    return deep;
+    if (val < (*tree)->data) {
+        insert(&(*tree)->Lchild,val);
+    }else if (val > (*tree)->data) {
+        insert(&(*tree)->Rchild,val);
+    }
 }
 
 /**6. leaf**/
 
 
 /**ceshi Main**/
-int main(int argc,const char *argv[])
+
+
+
+int main(int argc, const int *argv[])
 {
-    BNode *Root;
-    int depth,leafCount = 0;
-    printf("Please enter the first elements for Tree：\n");
-    CreateTree(&Root);
+    BNode * root;
+    BNode * tmp;
+    //int i;
 
-    printf("Traverse BiTree in PreOder：");
-    PreTrav(Root);
-    printf("\n");
+    root = NULL;
+//    root = NULL;
 
-    printf("Traverse BiTree in MidOder：");
-    MidTrav(Root);
-    printf("\n");
+ //    Inserting nodes into tree
+    insert(&root,9);
+    insert(&root,4);
+    insert(&root,15);
+    insert(&root,6);
+    insert(&root,12);
+    insert(&root,17);
+    insert(&root,2);
 
-    printf("Traverse BiTree in Postoder：");
-    PostTrav(Root);
-    printf("\n");
+    printf("Pre Order Display\n");
+    PreTrav(root);
 
-    depth = TreeDeep(Root);
-    printf("The depth of the tree is：%d\n",depth);
+    printf("In Order Display\n");
+    MidTrav(root);
 
+    printf("Post Order Display\n");
+    PostTrav(root);
 
+    int deep;
+    printf("tree depth is\n %d", TreeDeep(root));
 
-    return 0;
+//    Deleting all nodes of tree
+    delete_tree(root);
 }
+

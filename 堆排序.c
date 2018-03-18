@@ -63,10 +63,10 @@ void HeapSort(int A[], int N)
 
     }
     //步骤二：调整大根堆
-    for ( i = N-1; i > 0; i--)
+    for ( i = N-1; i >= 0; )
     {
          //首尾交换
-        _swap(&A[0], &A[i]);
+        _swap(&A[0], &A[i--]);
         //元素下沉
         PercDown(A, 0, i);
     }

@@ -49,7 +49,7 @@ int Shell_Sort(int *arr)
     int i, j, k, tmp;
     int incre;
 
-    for(incre = N/20; incre > 0;incre /= 2)
+    for(incre = N/20; incre >= 1;incre /= 2)
     {
         for(i = incre; i < N/10; i++)
         {
